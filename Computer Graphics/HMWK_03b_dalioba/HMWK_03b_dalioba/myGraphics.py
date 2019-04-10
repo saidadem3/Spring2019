@@ -24,7 +24,7 @@ class cl_world :
     for canvas in self.canvases :
       canvas.delete( 'all' )
 
-  def create_graphic_objects( self, canvas, modelData ) :
+  def create_graphic_objects( self, canvas, modelData, doClip ) :
     for v1Num, v2Num, v3Num in modelData.getFaces() :
       x1, y1, _ = modelData.getTransformedVertex( v1Num )
       x2, y2, _ = modelData.getTransformedVertex( v2Num )
