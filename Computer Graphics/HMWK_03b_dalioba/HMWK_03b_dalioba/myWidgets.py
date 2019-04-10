@@ -23,12 +23,12 @@ class cl_widgets :
 
     self.m_ModelData = None
 
+    self.var = tk.BooleanVar()
+    self.var.set( False )
+
     self.menu = cl_menu( self )
 
     self.toolbar = cl_toolbar( self )
-
-    self.var = tk.BooleanVar()
-    self.var.set( False )
 
     self.statusBar_frame = cl_statusBar_frame( self.ob_root_window )
     self.statusBar_frame.pack( side = tk.BOTTOM, fill = tk.X )
@@ -140,7 +140,7 @@ class cl_menu :
 
     dummy = tk.Menu( self.menu )
     self.menu.add_cascade( label = 'Settings', menu = dummy )
-    dummy.add_checkbutton( label = 'Clip', variable = self.master.var) #: self.menu_callback( 'settings>item1' ) 
+    dummy.add_checkbutton( label = 'Clip', variable = self.master.var) 
 
     dummy = tk.Menu( self.menu )
     self.menu.add_cascade( label = 'Help', menu = dummy )
@@ -211,14 +211,17 @@ class cl_toolbar :
     print( f'Canvas size   : ({width}, {height})' )
     print( f'Transform     : ax {ax:.3f} ay {ay:.3f} sx {sx:.3f} sy {sy:.3f}' )
 
-    self.master.ob_world.create_graphic_objects( self.master.ob_canvas_frame.canvas, self.master.m_ModelData, self.master.var )
+    self.master.ob_world.create_graphic_objects(
+      self.master.ob_canvas_frame.canvas,
+      self.master.m_ModelData,
+      self.master.var.get() == 1,
+    )
 
     vxMin = v[0] * width
     vxMax = v[2] * width
     vyMin = v[1] * height
     vyMax = v[3] * height
 
-    var.set( True ) #revise this
 
     self.master.ob_canvas_frame.canvas.create_line(
       vxMin, vyMin, vxMin, vyMax, vxMax, vyMax, vxMax, vyMin, vxMin, vyMin )
