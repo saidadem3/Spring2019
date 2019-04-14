@@ -24,6 +24,7 @@ class ModelData() :
     self.m_ax       = 0.0
     self.m_sy       = 1.0
     self.m_ay       = 0.0
+    self.distance   = 0.0
 
     if inputFile is not None :
       # File name was given.  Read the data from the file.
@@ -107,15 +108,24 @@ class ModelData() :
       self.m_minY, self.m_maxY,
       self.m_minZ, self.m_maxZ )
 
-  def specifyTransform( self, ax, ay, sx, sy ) :
+  def specifyTransform( self, ax, ay, sx, sy, distance ) :
     self.m_ax = ax
     self.m_sx = sx
     self.m_ay = ay
     self.m_sy = sy
+    self.distance = distance
 
-  def getTransformedVertex( self, vNum ) :
-    ( x, y, _ ) = self.m_Vertices[ vNum ]
+  def getTransformedVertex( self, vNum, doPerspective ) :
+    ( x, y, z ) = self.m_Vertices[ vNum ]
+    if doPerspective == True:    
+      if self.distance == 0 or self.distance <= z:
+        x = 0.0
+        y = 0.0
+        z = 0.0
+      else:
+        x,y = x/(1-(z/self.distance)), y/(1-(z/self.distance))
     return ( self.m_sx*x + self.m_ax, self.m_sy*y + self.m_ay, 0.0 )
+      
 
   def getCenter( self ) :
     return (

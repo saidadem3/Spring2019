@@ -24,7 +24,7 @@ class cl_world :
     for canvas in self.canvases :
       canvas.delete( 'all' )
 
-  def create_graphic_objects( self, canvas, modelData, doClip ) :
+  def create_graphic_objects( self, canvas, modelData, doClip, doPerspective) :
     ax, ay, sx, sy = modelData.getViewport()
     width  = int( canvas.cget( "width" ) )
     height = int( canvas.cget( "height" ) )
@@ -32,16 +32,16 @@ class cl_world :
     
     if doClip == False:
       for v1Num, v2Num, v3Num in modelData.getFaces() :
-        x1, y1, _ = modelData.getTransformedVertex( v1Num )
-        x2, y2, _ = modelData.getTransformedVertex( v2Num )
-        x3, y3, _ = modelData.getTransformedVertex( v3Num )
+        x1, y1, _ = modelData.getTransformedVertex( v1Num, doPerspective )
+        x2, y2, _ = modelData.getTransformedVertex( v2Num, doPerspective )
+        x3, y3, _ = modelData.getTransformedVertex( v3Num, doPerspective )
 
         canvas.create_line( x1, y1, x2, y2, x3, y3, x1, y1 )
     else:
       for v1Num, v2Num, v3Num in modelData.getFaces() :
-        x1, y1, _ = modelData.getTransformedVertex( v1Num )
-        x2, y2, _ = modelData.getTransformedVertex( v2Num )
-        x3, y3, _ = modelData.getTransformedVertex( v3Num )
+        x1, y1, _ = modelData.getTransformedVertex( v1Num, doPerspective )
+        x2, y2, _ = modelData.getTransformedVertex( v2Num, doPerspective )
+        x3, y3, _ = modelData.getTransformedVertex( v3Num, doPerspective )
 
         draw, p1x, p1y, p2x, p2y = clipLine(x1, y1, x2, y2, portal)
         print(f'draw the line between p1 and p2? {draw}')

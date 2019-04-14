@@ -26,6 +26,9 @@ class cl_widgets :
     self.var = tk.BooleanVar()
     self.var.set( False )
 
+    self.perspective = tk.BooleanVar()
+    self.perspective.set( False )
+
     self.menu = cl_menu( self )
 
     self.toolbar = cl_toolbar( self )
@@ -140,7 +143,8 @@ class cl_menu :
 
     dummy = tk.Menu( self.menu )
     self.menu.add_cascade( label = 'Settings', menu = dummy )
-    dummy.add_checkbutton( label = 'Clip', variable = self.master.var) 
+    dummy.add_checkbutton( label = 'Clip', variable = self.master.var)
+    dummy.add_checkbutton( label = 'Perspective', variable = self.master.perspective)  
 
     dummy = tk.Menu( self.menu )
     self.menu.add_cascade( label = 'Help', menu = dummy )
@@ -149,12 +153,6 @@ class cl_menu :
   def menu_callback( self, which = None ) :
     item = 'menu' if which is None else which
     self.master.statusBar_frame.set( f'{item!r} callback' )
-
-    #In the cl_menu > __init__() method, you can delete the
-     #'Item 1' and 'Item 2' entries in the 'Setting' menu and
-     #instead insert a check button with the lable 'Clip' and
-    # have it use as its variable the tk boolean variable you
-    # created in cl_widgets > __init__().  (One (1) line of code.)
 
 #----------------------------------------------------------------------
 class cl_toolbar :
@@ -171,11 +169,25 @@ class cl_toolbar :
     dummy = tk.Button( self.toolbar, text = 'Draw', width = 16, command = self.draw_callback )
     dummy.pack( side = tk.LEFT, padx = 2, pady = 2 )
 
+    dummy = tk.Button( self.toolbar, text = 'Distance', width = 16, command = self.distance_callback )
+    dummy.pack( side = tk.LEFT, padx = 2, pady = 2 )
+
     self.toolbar.pack( side = tk.TOP, fill = tk.X )
 
   def reset_callback( self ) :
     self.master.ob_world.reset()
     self.master.statusBar_frame.set( 'Reset callback' )
+
+  def distance_callback( self ) :
+    model = self.master.m_ModelData
+    f = simpledialog.askfloat( "Title", "Prompt?",
+              initialvalue = model.distance, minvalue = 0 )
+    if f is None:
+      self.master.statusBar_frame.set( 'Distance was cancelled' )
+    else:
+      model.distance = f
+      self.master.statusBar_frame.set( f'Distance set to: {model.distance}' )
+
 
   def load_callback( self ) :
     fName = tk.filedialog.askopenfilename( filetypes = [ ( "allfiles", "*" ) ] )
@@ -193,7 +205,8 @@ class cl_toolbar :
       self.master.statusBar_frame.set( 'Load callback' )
 
   def draw_callback( self ) :
-    if self.master.m_ModelData is None :
+    model = self.master.m_ModelData
+    if model is None :
       self.master.statusBar_frame.set( 'No model loaded.' )
       return
 
@@ -205,16 +218,18 @@ class cl_toolbar :
 
     ( ax, ay, sx, sy ) = constructTransform( w, v, width, height )
 
-    self.master.m_ModelData.specifyTransform( ax, ay, sx, sy )
+    model.specifyTransform( ax, ay, sx, sy, model.distance )
 
     print(  '---Draw' )
     print( f'Canvas size   : ({width}, {height})' )
     print( f'Transform     : ax {ax:.3f} ay {ay:.3f} sx {sx:.3f} sy {sy:.3f}' )
 
+    print(self.master.perspective.get() == 1)
     self.master.ob_world.create_graphic_objects(
       self.master.ob_canvas_frame.canvas,
-      self.master.m_ModelData,
+      model,
       self.master.var.get() == 1,
+      self.master.perspective.get() == 1,
     )
 
     vxMin = v[0] * width
