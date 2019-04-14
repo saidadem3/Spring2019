@@ -44,9 +44,7 @@ class cl_world :
         x3, y3, _ = modelData.getTransformedVertex( v3Num, doPerspective )
 
         draw, p1x, p1y, p2x, p2y = clipLine(x1, y1, x2, y2, portal)
-        print(f'draw the line between p1 and p2? {draw}')
         if draw == True:
-          print( f'drawing line from p1: {x1},{y1} to p2: {x2},{y2}')
           canvas.create_line(p1x, p1y, p2x, p2y)
         draw, p1x, p1y, p2x, p2y = clipLine(x2, y2, x3, y3, portal)
         if draw == True:
