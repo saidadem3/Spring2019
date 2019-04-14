@@ -43,7 +43,7 @@ class cl_canvas_frame :
   def __init__( self, master ) :
     self.master = master
     self.canvas = tk.Canvas(
-      master.ob_root_window, width=1, height=1, bg='teal' )
+      master.ob_root_window, width=1, height=1, bg='cyan' )
 
     self.canvas.pack( expand=tk.YES, fill=tk.BOTH )
     self.canvas.bind( '<Configure>',       self.canvas_resized_callback )
@@ -117,7 +117,7 @@ class cl_statusBar_frame( tk.Frame ) :
     self.label.pack( fill = tk.X )
 
   def set( self, formatStr, *args ) :
-    self.label.config( text = 'dalioba: ' + ( formatStr % args ) )
+    self.label.config( text = 'saa3053: ' + ( formatStr % args ) )
     self.label.update_idletasks()
 
   def clear( self ) :
