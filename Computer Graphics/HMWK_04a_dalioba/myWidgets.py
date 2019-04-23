@@ -1,6 +1,6 @@
 # Adem, Said
 # saa3053
-# 2019-16-04
+# 2019-25-04
 #----------------------------------------------------------------------
 # This code was originally created by Prof. Farhad Kamangar.
 # It has been significantly modified and updated by Brian A. Dalio for
@@ -10,6 +10,7 @@
 import tkinter as tk
 from tkinter import simpledialog
 from tkinter import filedialog
+import math
 
 #----------------------------------------------------------------------
 from ModelData           import ModelData
@@ -36,7 +37,9 @@ class cl_widgets :
 
     self.toolbar = cl_toolbar( self )
     self.distance   = 0.0
-    self.angle     = (0.0, 0.0, 0.0)#ask (Euler angles)
+    self.phi     = 0.0
+    self.theta   = 0.0
+    self.psi     = 0.0
 
     self.statusBar_frame = cl_statusBar_frame( self.ob_root_window )
     self.statusBar_frame.pack( side = tk.BOTTOM, fill = tk.X )
@@ -169,13 +172,13 @@ class cl_toolbar :
     dummy = tk.Button( self.toolbar, text = 'Distance', width = 16, command = self.distance_callback )
     dummy.pack( side = tk.LEFT, padx = 2, pady = 2 )
 
-    dummy = tk.Button( self.toolbar, text = 'φ', width = 16, command = self.angle_callback ) #angle callbak for all 3?
+    dummy = tk.Button( self.toolbar, text = 'φ', width = 2, command = self.phi_callback ) #angle callbak for all 3?
     dummy.pack( side = tk.LEFT, padx = 2, pady = 2 )
 
-    dummy = tk.Button( self.toolbar, text = 'θ', width = 16, command = self.angle_callback )
+    dummy = tk.Button( self.toolbar, text = 'θ', width = 2, command = self.theta_callback )
     dummy.pack( side = tk.LEFT, padx = 2, pady = 2 )
 
-    dummy = tk.Button( self.toolbar, text = 'ψ', width = 16, command = self.angle_callback )
+    dummy = tk.Button( self.toolbar, text = 'ψ', width = 2, command = self.psi_callback )
     dummy.pack( side = tk.LEFT, padx = 2, pady = 2 )
 
     dummy = tk.Button( self.toolbar, text = 'Reset', width = 16, command = self.reset_callback )
@@ -202,16 +205,32 @@ class cl_toolbar :
       self.master.distance = f
       self.master.statusBar_frame.set( f'Distance set to: {self.master.distance}' )
 
-  
-  #how will this play with 3 different angle roll yarn r--
-  # def angle_callback( self ) :
-  #   f = simpledialog.askfloat( "Title", "Prompt?",
-  #             initialvalue = self.master.angle, minvalue = 0 )
-  #   if f is None:
-  #     self.master.statusBar_frame.set( 'angle was cancelled' )
-  #   else:
-  #     self.master.angle = f
-  #     self.master.statusBar_frame.set( f'angle set to: {self.master.phi}' )
+  def phi_callback( self ) :
+    f = simpledialog.askfloat( "Title", "Prompt?",
+              initialvalue = self.master.phi, minvalue = 0 )
+    if f is None:
+      self.master.statusBar_frame.set( 'φ was cancelled' )
+    else:
+      self.master.phi = math.radians(f)
+      self.master.statusBar_frame.set( f'φ set to: {round(math.degrees(self.master.phi), 1)}' )
+
+  def theta_callback( self ) :
+    f = simpledialog.askfloat( "Title", "Prompt?",
+              initialvalue = self.master.theta, minvalue = 0 )
+    if f is None:
+      self.master.statusBar_frame.set( 'θ was cancelled' )
+    else:
+      self.master.theta = math.radians(f)
+      self.master.statusBar_frame.set( f'θ set to: {round(math.degrees(self.master.theta), 1)}' )
+
+  def psi_callback( self ) :
+    f = simpledialog.askfloat( "Title", "Prompt?",
+              initialvalue = self.master.psi, minvalue = 0 )
+    if f is None:
+      self.master.statusBar_frame.set( 'ψ was cancelled' )
+    else:
+      self.master.psi = math.radians(f)
+      self.master.statusBar_frame.set( f'ψ set to: {round(math.degrees(self.master.psi), 1)}' )
 
   def load_callback( self ) :
     fName = tk.filedialog.askopenfilename( filetypes = [ ( "allfiles", "*" ) ] )
@@ -243,6 +262,8 @@ class cl_toolbar :
     ( ax, ay, sx, sy ) = constructTransform( w, v, width, height )
 
     model.specifyTransform( ax, ay, sx, sy, self.master.distance )
+
+    model.specifyEuler( self, self.master.phi, self.master.theta, self.master.psi )
 
     print(  '---Draw' )
     print( f'Canvas size   : ({width}, {height})' )

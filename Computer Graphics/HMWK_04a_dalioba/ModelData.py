@@ -1,6 +1,6 @@
 # Adem, Said
 # saa3053
-# 2019-16-04
+# 2019-25-04
 
 #---------#---------#---------#---------#---------#--------#
 import sys
@@ -135,9 +135,9 @@ class ModelData() :
     self.distance = distance
 
   def specifyEuler( self, phi, theta, psi ) :
-    cosPhi,   sinPhi  = math.cosPhi( phi ),     math.sinPhi( phi )
-    cosTheta, sinTheta = math.cosTheta( theta ), math.sinTheta( theta )
-    cosPsi,   sinPsi  = math.cosPsi( psi ),     math.sinPsi( psi )
+    cosPhi,   sinPhi  = math.cos( phi ),     math.sin( phi )
+    cosTheta, sinTheta = math.cos( theta ), math.sin( theta )
+    cosPsi,   sinPsi  = math.cos( psi ),     math.sin( psi )
 
     cosPhiCosPsi =  cosPhi * cosPsi
     cosPhiSinPsi =  cosPhi * sinPsi
@@ -164,12 +164,11 @@ class ModelData() :
 
   def getTransformedVertex( self, vNum, doPerspective, doEuler ) :
     ( x, y, z ) = self.m_Vertices[ vNum ]
-    ( xprime, yprime, zprime ) = self.m_Vertices[ vNum ] #not sure about this, most likely wrong. Just need x y z from vNum. This doesn't make any sense.
     if doEuler == True:
       xprime = self.r00*x + self.r01*y + self.r02*z + ( self.ex )
       yprime = self.r10*x + self.r11*y + self.r12*z + ( self.ey )
       zprime = self.r20*x + self.r21*y + self.r22*z + ( self.ez )
-      return ( xprime, yprime, zprime ) #ask if your doEuler is correct.
+      x, y, z = xprime, yprime, zprime #I'm pretty sure this is correct
     if doPerspective == True:    
       if self.distance == 0 or self.distance <= z:
         x = 0.0
