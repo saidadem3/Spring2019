@@ -115,6 +115,24 @@ class ModelData() :
     self.m_sy = sy
     self.distance = distance
 
+  def specifyEuler( self, phi, theta, psi ) :
+    cosPhi,   sinPhi  = math.cosPhi( phi ),     math.sinPhi( phi )
+    cosTheta, sinTheta = math.cosTheta( theta ), math.sinTheta( theta )
+    cosPsi,   sinPsi  = math.cosPsi( psi ),     math.sinPsi( psi )
+
+    cosPhiCosPsi =  cosPhi * cosPsi
+    cosPhiSinPsi =  cosPhi * sinPsi
+    sinPhiCosPsi =  sinPhi * cosPsi
+    sinPhiSinPsi =  sinPhi * sinPsi
+
+    self.r00 = cosPsi * cosTheta
+    self.r01 = -cosTheta * sinPsi
+    self.r02 = sinTheta
+    self.r10 = cosPhiSinPsi + cosPhiSinPsi*sinTheta
+    self.r11 = cosPhiCosPsi - sinPhiSinPsi*sinTheta
+    self.r12 = -cosTheta*sinPhi
+    #left off here
+
   def getTransformedVertex( self, vNum, doPerspective ) :
     ( x, y, z ) = self.m_Vertices[ vNum ]
     if doPerspective == True:    
