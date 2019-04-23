@@ -4,6 +4,7 @@
 
 #---------#---------#---------#---------#---------#--------#
 import sys
+import math
 
 #----------------------------------------------------------------------
 class ModelData() :
@@ -25,6 +26,24 @@ class ModelData() :
     self.m_sy       = 1.0
     self.m_ay       = 0.0
     self.distance   = 0.0
+
+    # IS THIS NECESSARY!?
+    # self.r00        = 0.0
+    # self.r01        = 0.0
+    # self.r02        = 0.0
+    
+    # self.r10        = 0.0
+    # self.r11        = 0.0
+    # self.r12        = 0.0
+
+    # self.r20        = 0.0
+    # self.r21        = 0.0
+    # self.r22        = 0.0
+
+    # self.ex        = 0.0
+    # self.ey        = 0.0
+    # self.ez        = 0.0
+
 
     if inputFile is not None :
       # File name was given.  Read the data from the file.
@@ -128,13 +147,29 @@ class ModelData() :
     self.r00 = cosPsi * cosTheta
     self.r01 = -cosTheta * sinPsi
     self.r02 = sinTheta
+    
     self.r10 = cosPhiSinPsi + cosPhiSinPsi*sinTheta
     self.r11 = cosPhiCosPsi - sinPhiSinPsi*sinTheta
     self.r12 = -cosTheta*sinPhi
-    #left off here
+    
+    self.r20 = -cosPhiCosPsi * sinTheta + sinPhiSinPsi
+    self.r21 = cosPhiSinPsi * sinTheta + sinPhiCosPsi
+    self.r22 = cosPhi * cosTheta
 
-  def getTransformedVertex( self, vNum, doPerspective ) :
+    tx, ty, tz = self.getCenter()
+
+    self.ex = -self.r00*tx - self.r01*ty - self.r02*tz + tx
+    self.ey = -self.r10*tx - self.r11*ty - self.r12*tz + ty
+    self.ez = -self.r20*tx - self.r21*ty - self.r22*tz + tz
+
+  def getTransformedVertex( self, vNum, doPerspective, doEuler ) :
     ( x, y, z ) = self.m_Vertices[ vNum ]
+    ( xprime, yprime, zprime ) = self.m_Vertices[ vNum ] #not sure about this, most likely wrong. Just need x y z from vNum. This doesn't make any sense.
+    if doEuler == True:
+      xprime = self.r00*x + self.r01*y + self.r02*z + ( self.ex )
+      yprime = self.r10*x + self.r11*y + self.r12*z + ( self.ey )
+      zprime = self.r20*x + self.r21*y + self.r22*z + ( self.ez )
+      return ( xprime, yprime, zprime ) #ask if your doEuler is correct.
     if doPerspective == True:    
       if self.distance == 0 or self.distance <= z:
         x = 0.0

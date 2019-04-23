@@ -29,10 +29,14 @@ class cl_widgets :
     self.perspective = tk.BooleanVar()
     self.perspective.set( False )
 
+    self.Euler = tk.BooleanVar()
+    self.Euler.set( False )
+
     self.menu = cl_menu( self )
 
     self.toolbar = cl_toolbar( self )
     self.distance   = 0.0
+    self.angle     = (0.0, 0.0, 0.0)#ask (Euler angles)
 
     self.statusBar_frame = cl_statusBar_frame( self.ob_root_window )
     self.statusBar_frame.pack( side = tk.BOTTOM, fill = tk.X )
@@ -144,8 +148,9 @@ class cl_menu :
 
     dummy = tk.Menu( self.menu )
     self.menu.add_cascade( label = 'Settings', menu = dummy )
-    dummy.add_checkbutton( label = 'Clip', variable = self.master.var)
-    dummy.add_checkbutton( label = 'Perspective', variable = self.master.perspective)  
+    dummy.add_checkbutton( label = 'Clip', variable = self.master.var )
+    dummy.add_checkbutton( label = 'Perspective', variable = self.master.perspective )  
+    dummy.add_checkbutton( label = 'Euler', variable = self.master.Euler )
 
     dummy = tk.Menu( self.menu )
     self.menu.add_cascade( label = 'Help', menu = dummy )
@@ -162,6 +167,15 @@ class cl_toolbar :
     self.toolbar = tk.Frame( master.ob_root_window )
 
     dummy = tk.Button( self.toolbar, text = 'Distance', width = 16, command = self.distance_callback )
+    dummy.pack( side = tk.LEFT, padx = 2, pady = 2 )
+
+    dummy = tk.Button( self.toolbar, text = 'φ', width = 16, command = self.angle_callback ) #angle callbak for all 3?
+    dummy.pack( side = tk.LEFT, padx = 2, pady = 2 )
+
+    dummy = tk.Button( self.toolbar, text = 'θ', width = 16, command = self.angle_callback )
+    dummy.pack( side = tk.LEFT, padx = 2, pady = 2 )
+
+    dummy = tk.Button( self.toolbar, text = 'ψ', width = 16, command = self.angle_callback )
     dummy.pack( side = tk.LEFT, padx = 2, pady = 2 )
 
     dummy = tk.Button( self.toolbar, text = 'Reset', width = 16, command = self.reset_callback )
@@ -188,6 +202,16 @@ class cl_toolbar :
       self.master.distance = f
       self.master.statusBar_frame.set( f'Distance set to: {self.master.distance}' )
 
+  
+  #how will this play with 3 different angle roll yarn r--
+  # def angle_callback( self ) :
+  #   f = simpledialog.askfloat( "Title", "Prompt?",
+  #             initialvalue = self.master.angle, minvalue = 0 )
+  #   if f is None:
+  #     self.master.statusBar_frame.set( 'angle was cancelled' )
+  #   else:
+  #     self.master.angle = f
+  #     self.master.statusBar_frame.set( f'angle set to: {self.master.phi}' )
 
   def load_callback( self ) :
     fName = tk.filedialog.askopenfilename( filetypes = [ ( "allfiles", "*" ) ] )
