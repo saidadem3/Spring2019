@@ -28,21 +28,21 @@ class ModelData() :
     self.distance   = 0.0
 
     # IS THIS NECESSARY!?
-    # self.r00        = 0.0
-    # self.r01        = 0.0
-    # self.r02        = 0.0
+    self.r00        = 0.0
+    self.r01        = 0.0
+    self.r02        = 0.0
     
-    # self.r10        = 0.0
-    # self.r11        = 0.0
-    # self.r12        = 0.0
+    self.r10        = 0.0
+    self.r11        = 0.0
+    self.r12        = 0.0
 
-    # self.r20        = 0.0
-    # self.r21        = 0.0
-    # self.r22        = 0.0
+    self.r20        = 0.0
+    self.r21        = 0.0
+    self.r22        = 0.0
 
-    # self.ex        = 0.0
-    # self.ey        = 0.0
-    # self.ez        = 0.0
+    self.ex        = 0.0
+    self.ey        = 0.0
+    self.ez        = 0.0
 
 
     if inputFile is not None :

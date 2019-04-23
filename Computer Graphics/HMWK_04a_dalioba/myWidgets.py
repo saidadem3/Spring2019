@@ -203,7 +203,7 @@ class cl_toolbar :
       self.master.statusBar_frame.set( 'Distance was cancelled' )
     else:
       self.master.distance = f
-      self.master.statusBar_frame.set( f'Distance set to: {self.master.distance}' )
+      self.master.statusBar_frame.set( f'Distance: {self.master.distance}, φ: {round(math.degrees(self.master.phi), 1)}°  θ: {round(math.degrees(self.master.theta), 1)}°  ψ: {round(math.degrees(self.master.psi), 1)}°' )
 
   def phi_callback( self ) :
     f = simpledialog.askfloat( "Title", "Prompt?",
@@ -212,7 +212,7 @@ class cl_toolbar :
       self.master.statusBar_frame.set( 'φ was cancelled' )
     else:
       self.master.phi = math.radians(f)
-      self.master.statusBar_frame.set( f'φ set to: {round(math.degrees(self.master.phi), 1)}' )
+      self.master.statusBar_frame.set( f'Distance: {self.master.distance}, φ: {round(math.degrees(self.master.phi), 1)}°  θ: {round(math.degrees(self.master.theta), 1)}°  ψ: {round(math.degrees(self.master.psi), 1)}°' )
 
   def theta_callback( self ) :
     f = simpledialog.askfloat( "Title", "Prompt?",
@@ -221,7 +221,7 @@ class cl_toolbar :
       self.master.statusBar_frame.set( 'θ was cancelled' )
     else:
       self.master.theta = math.radians(f)
-      self.master.statusBar_frame.set( f'θ set to: {round(math.degrees(self.master.theta), 1)}' )
+      self.master.statusBar_frame.set( f'Distance: {self.master.distance}, φ: {round(math.degrees(self.master.phi), 1)}°  θ: {round(math.degrees(self.master.theta), 1)}°  ψ: {round(math.degrees(self.master.psi), 1)}°' )
 
   def psi_callback( self ) :
     f = simpledialog.askfloat( "Title", "Prompt?",
@@ -230,7 +230,7 @@ class cl_toolbar :
       self.master.statusBar_frame.set( 'ψ was cancelled' )
     else:
       self.master.psi = math.radians(f)
-      self.master.statusBar_frame.set( f'ψ set to: {round(math.degrees(self.master.psi), 1)}' )
+      self.master.statusBar_frame.set( f'Distance: {self.master.distance}, φ: {round(math.degrees(self.master.phi), 1)}°  θ: {round(math.degrees(self.master.theta), 1)}°  ψ: {round(math.degrees(self.master.psi), 1)}°' )
 
   def load_callback( self ) :
     fName = tk.filedialog.askopenfilename( filetypes = [ ( "allfiles", "*" ) ] )
@@ -263,7 +263,7 @@ class cl_toolbar :
 
     model.specifyTransform( ax, ay, sx, sy, self.master.distance )
 
-    model.specifyEuler( self, self.master.phi, self.master.theta, self.master.psi )
+    model.specifyEuler( self.master.phi, self.master.theta, self.master.psi )
 
     print(  '---Draw' )
     print( f'Canvas size   : ({width}, {height})' )
@@ -275,6 +275,7 @@ class cl_toolbar :
       model,
       self.master.var.get() == 1,
       self.master.perspective.get() == 1,
+      self.master.Euler.get() == 1,
     )
 
     vxMin = v[0] * width
