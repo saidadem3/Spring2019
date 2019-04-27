@@ -27,7 +27,6 @@ class ModelData() :
     self.m_ay       = 0.0
     self.distance   = 0.0
 
-    # IS THIS NECESSARY!?
     self.r00        = 0.0
     self.r01        = 0.0
     self.r02        = 0.0
@@ -148,7 +147,7 @@ class ModelData() :
     self.r01 = -cosTheta * sinPsi
     self.r02 = sinTheta
     
-    self.r10 = cosPhiSinPsi + cosPhiSinPsi*sinTheta
+    self.r10 = cosPhiSinPsi + cosPsi*sinPhi * sinTheta
     self.r11 = cosPhiCosPsi - sinPhiSinPsi*sinTheta
     self.r12 = -cosTheta*sinPhi
     
@@ -168,7 +167,7 @@ class ModelData() :
       xprime = self.r00*x + self.r01*y + self.r02*z + ( self.ex )
       yprime = self.r10*x + self.r11*y + self.r12*z + ( self.ey )
       zprime = self.r20*x + self.r21*y + self.r22*z + ( self.ez )
-      x, y, z = xprime, yprime, zprime #I'm pretty sure this is correct
+      x, y, z = xprime, yprime, zprime
     if doPerspective == True:    
       if self.distance == 0 or self.distance <= z:
         x = 0.0
